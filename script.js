@@ -9,7 +9,7 @@ async function fetchInstagramData() {
     document.getElementById('result').innerHTML = "Loading...";
 
     // Make API call to fetch Instagram profile data
-    const accessToken = '456057667462081|df9UL0l_sIuGZLKpt86W1R5R7_g';  // Replace with your actual access token
+    const accessToken = 'YOUR_ACCESS_TOKEN_HERE';  // Replace with your actual access token
 
     try {
         // Get user ID using the access token
@@ -71,20 +71,26 @@ async function getUserId(accessToken) {
     const url = `https://graph.instagram.com/me?fields=id,username&access_token=${accessToken}`;
 
     try {
+        console.log('Fetching user ID from API...');
         const response = await fetch(url);
+        console.log('Response received:', response);
+
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            const errorText = await response.text();
+            throw new Error(`HTTP error! status: ${response.status}, response: ${errorText}`);
         }
+
         const data = await response.json();
+        console.log('User data received:', data);
         return data.id;
     } catch (error) {
-        console.error('Error occurred:', error);
+        console.error('Error occurred while fetching user ID:', error);
         return null;
     }
 }
 
 // Example usage
-const accessToken = 'YOUR_ACCESS_TOKEN_HERE';  // Replace with your actual access token
+const accessToken = '456057667462081|df9UL0l_sIuGZLKpt86W1R5R7_g';  // Replace with your actual access token
 getUserId(accessToken).then(userId => {
     if (userId) {
         console.log('User ID:', userId);
