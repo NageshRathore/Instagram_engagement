@@ -9,7 +9,7 @@ async function fetchInstagramData() {
     document.getElementById('result').innerHTML = "Loading...";
 
     // Make API call to fetch Instagram profile data
-    const accessToken = 'YOUR_ACCESS_TOKEN_HERE';  // Replace with your actual access token
+    const accessToken = '456057667462081|df9UL0l_sIuGZLKpt86W1R5R7_g';  // Replace with your actual access token
 
     try {
         // Get user ID using the access token
