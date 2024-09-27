@@ -5,96 +5,51 @@ async function fetchInstagramData() {
         return;
     }
 
-    // Show loading indicator
-    document.getElementById('result').innerHTML = "Loading...";
+    // API endpoint and token (replace with your actual API key)
+    const url = `https://api.apify.com/v2/actor-tasks/SLmgNoGXnDUCrjZ81/run-sync-get-dataset-items?username=${username}`;
+    const apiToken = 'apify_api_OxtzvJGARoLrccq9dN4uYxTbjT1ria4hxmFB';  // Your API token from the service
 
-    // Make API call to fetch Instagram profile data
-    const accessToken = '456057667462081|df9UL0l_sIuGZLKpt86W1R5R7_g';  // Replace with your actual user access token
+    const options = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiToken}`  // Token passed as a Bearer Token
+        }
+    };
 
     try {
-        // Get user ID using the access token
-        const userId = await getUserId(accessToken);
-        if (!userId) {
-            document.getElementById('result').innerHTML = "Failed to get user ID.";
-            return;
-        }
-
-        const url = `https://graph.instagram.com/${userId}?fields=id,username,media_count&access_token=${accessToken}`;
-        console.log('Fetching data from API...');
-        const response = await fetch(url);
-        console.log('Response received:', response);
-
+        const response = await fetch(url, options);
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
-        console.log('Data received:', data);
 
-        if (data && data.username) {
-            const mediaCount = data.media_count;
-
-            // Fetch recent media to calculate engagement rate
-            const mediaUrl = `https://graph.instagram.com/${data.id}/media?fields=id,like_count,comments_count&access_token=${accessToken}`;
-            const mediaResponse = await fetch(mediaUrl);
-            const mediaData = await mediaResponse.json();
-
+        if (data && data.length > 0) {
+            const profile = data[0];
+            const followers = profile.followersCount;
+            const posts = profile.posts;
             let totalLikes = 0;
             let totalComments = 0;
-            const posts = mediaData.data;
 
             // Calculate likes and comments for the most recent 5 posts
             for (let i = 0; i < Math.min(posts.length, 5); i++) {
-                totalLikes += posts[i].like_count;
-                totalComments += posts[i].comments_count;
+                totalLikes += posts[i].likesCount;
+                totalComments += posts[i].commentsCount;
             }
 
-            // Placeholder for followers count as it's not provided by the API
-            const followers = 1000;  // Replace with actual followers count if available
             const engagementRate = ((totalLikes + totalComments) / followers) * 100;
 
             document.getElementById('result').innerHTML = `
                 Username: @${username} <br>
-                Media Count: ${mediaCount} <br>
+                Followers: ${followers} <br>
                 Engagement Rate (last 5 posts): ${engagementRate.toFixed(2)}%
             `;
         } else {
-            document.getElementById('result').innerHTML = "Username not found or API limit reached.";
+            document.getElementById('result').innerHTML = "Username not found.";
         }
     } catch (error) {
         console.error('Error occurred:', error);
         document.getElementById('result').innerHTML = "An error occurred while fetching data.";
     }
 }
-
-async function getUserId(accessToken) {
-    const url = `https://graph.instagram.com/me?fields=id,username&access_token=${accessToken}`;
-
-    try {
-        console.log('Fetching user ID from API...');
-        const response = await fetch(url);
-        console.log('Response received:', response);
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`HTTP error! status: ${response.status}, response: ${errorText}`);
-        }
-
-        const data = await response.json();
-        console.log('User data received:', data);
-        return data.id;
-    } catch (error) {
-        console.error('Error occurred while fetching user ID:', error);
-        return null;
-    }
-}
-
-
-const accessToken = '456057667462081|df9UL0l_sIuGZLKpt86W1R5R7_g';  // Replace with your actual user access token
-getUserId(accessToken).then(userId => {
-    if (userId) {
-        console.log('User ID:', userId);
-    } else {
-        console.log('Failed to get user ID');
-    }
-});
