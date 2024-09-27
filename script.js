@@ -9,7 +9,7 @@ async function fetchInstagramData() {
     document.getElementById('result').innerHTML = "Loading...";
 
     // Make API call to fetch Instagram profile data
-    const accessToken = '456057667462081|df9UL0l_sIuGZLKpt86W1R5R7_g';  // Replace with your actual access token
+    const accessToken = '456057667462081|df9UL0l_sIuGZLKpt86W1R5R7_g';  // Replace with your actual user access token
 
     try {
         // Get user ID using the access token
@@ -89,8 +89,8 @@ async function getUserId(accessToken) {
     }
 }
 
-// Example usage
-const accessToken = '456057667462081|df9UL0l_sIuGZLKpt86W1R5R7_g';  // Replace with your actual access token
+
+const accessToken = '456057667462081|df9UL0l_sIuGZLKpt86W1R5R7_g';  // Replace with your actual user access token
 getUserId(accessToken).then(userId => {
     if (userId) {
         console.log('User ID:', userId);
