@@ -6,7 +6,7 @@ async function fetchInstagramData() {
     }
 
     // API endpoint and token (replace with your actual API key)
-    const url =`https://api.apify.com/v2/users/me?token=apify_api_OxtzvJGARoLrccq9dN4uYxTbjT1ria4hxmFB&username=${username}`;
+    const url =`https://api.apify.com/v2/acts/apify~instagram-scraper/runs?token=apify_api_OxtzvJGARoLrccq9dN4uYxTbjT1ria4hxmFB`;
     const apiToken = 'apify_api_OxtzvJGARoLrccq9dN4uYxTbjT1ria4hxmFB';  // Your API token from the service
 
     const options = {
