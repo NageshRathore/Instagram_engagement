@@ -1,3 +1,9 @@
+const { ApifyClient } = require('apify-client');
+
+const client = new ApifyClient({
+    token: 'apify_api_OxtzvJGARoLrccq9dN4uYxTbjT1ria4hxmFB', // Replace with your actual Apify token
+});
+
 async function fetchInstagramData() {
     const username = document.getElementById('username').value.trim();
     if (!username) {
@@ -5,28 +11,17 @@ async function fetchInstagramData() {
         return;
     }
 
-    // API endpoint and token (replace with your actual API key)
-    const url =`https://api.apify.com/v2/acts/apify~instagram-scraper/runs?token=apify_api_OxtzvJGARoLrccq9dN4uYxTbjT1ria4hxmFB`;
-    const apiToken = 'apify_api_OxtzvJGARoLrccq9dN4uYxTbjT1ria4hxmFB';  // Your API token from the service
-
-    const options = {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiToken}`  // Token passed as a Bearer Token
-        }
-    };
-
     try {
-        const response = await fetch(url, options);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        // Start the actor and wait for it to finish
+        const { defaultDatasetId } = await client.actor('apify/instagram-scraper').call({
+            username: username
+        });
 
-        const data = await response.json();
+        // Fetch the dataset items
+        const { items } = await client.dataset(defaultDatasetId).listItems();
 
-        if (data && data.length > 0) {
-            const profile = data[0];
+        if (items && items.length > 0) {
+            const profile = items[0];
             const followers = profile.followersCount;
             const posts = profile.posts;
             let totalLikes = 0;
@@ -50,6 +45,6 @@ async function fetchInstagramData() {
         }
     } catch (error) {
         console.error('Error occurred:', error);
-        document.getElementById('result').innerHTML = "An error occurred while fetching data.";
+        document.getElementById('result').innerHTML = `An error occurred while fetching data: ${error.message}`;
     }
 }
