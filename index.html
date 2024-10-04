@@ -3,19 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instagram Engagement Calculator</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Instagram Scraper</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Instagram Engagement Calculator</h1>
-        <div class="input-container">
-            <label for="username">Instagram Username:</label>
-            <input type="text" id="username" placeholder="Enter Instagram username">
-        </div>
-        <button onclick="fetchInstagramData()">Get Engagement Rate</button>
-        <div id="result"></div>
-    </div>
-    <script src="script.js"></script>
+    <h1>Instagram Username Scraper</h1>
+    <form id="usernameForm">
+        <input type="text" id="username" placeholder="Enter Instagram Username" required />
+        <button type="submit">Submit</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('usernameForm').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent form submission
+
+            const username = document.getElementById('username').value;
+            const response = await fetch('/instagram', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username }),
+            });
+
+            const resultDiv = document.getElementById('result');
+            if (response.ok) {
+                const data = await response.json();
+                resultDiv.innerHTML = `<h2>Results for ${data.username}:</h2>
+                                        <p>Followers: ${data.followers}</p>
+                                        <p>Engagement Rate: ${data.engagementRate}%</p>
+                                        <p>Total Likes: ${data.totalLikes}</p>
+                                        <p>Total Comments: ${data.totalComments}</p>`;
+            } else {
+                const errorData = await response.json();
+                resultDiv.innerHTML = `<p style="color:red;">Error: ${errorData.error}</p>`;
+            }
+        });
+    </script>
 </body>
 </html>

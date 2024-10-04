@@ -9,7 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "apify-client": "^2.9.6"
+    "apify-client": "^2.9.6",
+    "axios": "^1.7.7",
+    "express": "^4.21.0"
   },
   "description": ""
 }
