@@ -3,15 +3,20 @@
   "version": "1.0.0",
   "main": "script.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "apify-client": "^2.9.6",
+<<<<<<< HEAD
     "axios": "^1.7.7",
+=======
+>>>>>>> f8106bcc41111585631f51e42ba052834fe4db7c
     "express": "^4.21.0"
   },
+  "devDependencies": {},
   "description": ""
 }

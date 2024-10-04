@@ -1,6 +1,6 @@
 const express = require('express'); 
 const axios = require('axios');
-const path = require('path'); // Import path module
+const path = require('path'); 
 const app = express();
 const port = 3000;
 
@@ -11,10 +11,10 @@ app.use(express.static(__dirname));
 app.use(express.json());
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html')); // Serve the HTML file
+    res.sendFile(path.join(__dirname, 'index.html')); 
 });
 
-// Endpoint to fetch Instagram data
+
 app.post('/instagram', async (req, res) => {
     const { username } = req.body;
     console.log(`Received request for username: ${username}`);
@@ -29,7 +29,7 @@ app.post('/instagram', async (req, res) => {
 
         console.log('Response from Apify:', response.data);
         
-        // Check if items were retrieved
+   
         const items = response.data;
 
         console.log('Items retrieved from the dataset:', items);
